@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout - Jasa Pembuatan Website & Desain Grafis Profesional</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #977DFF;
+            --accent-color: #2E49FA;
+            --dark-color: #1A1A2E;
+            --light-color: #FFFFFF;
+            --gray-color: #F5F5F7;
+            --text-color: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            background-color: var(--light-color);
+            overflow-x: hidden;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: var(--light-color);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-left: 30px;
+        }
+
+        .nav-link {
+            color: var(--dark-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: transparent;
+            color: var(--primary-color);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--accent-color);
+            color: var(--light-color);
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+
+        .bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px auto;
+            background-color: var(--dark-color);
+            transition: all 0.3s ease;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 150px 0 100px;
+            background: linear-gradient(135deg, rgba(151, 125, 255, 0.1) 0%, rgba(46, 73, 250, 0.1) 100%);
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .hero-text {
+            flex: 1;
+            padding-right: 30px;
+        }
+
+        .hero-heading {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+            line-height: 1.2;
+        }
+
+        .hero-heading span {
+            color: var(--primary-color);
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #555;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .hero-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background-color: var(--light-color);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: var(--light-color);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(151, 125, 255, 0.15);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: var(--light-color);
+            font-size: 28px;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+
+        .feature-description {
+            color: #666;
+        }
+
+        /* About Section */
+        .about {
+            padding: 100px 0;
+            background-color: var(--gray-color);
+        }
+
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .about-image {
+            flex: 1;
+        }
+
+        .about-image img {
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .about-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        /* Call Me Section */
+        .call-me {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            color: var(--light-color);
+            text-align: center;
+        }
+
+        .call-me h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .call-me p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .footer-column p,
+        .footer-column a {
+            color: #ccc;
+            margin-bottom: 10px;
+            display: block;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: var(--primary-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary-color);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ccc;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-text {
+                padding-right: 0;
+                margin-bottom: 40px;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .about-content {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+
+            .hamburger.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active .bar:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+
+            .hamburger.active .bar:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 80px;
+                gap: 0;
+                flex-direction: column;
+                background-color: var(--light-color);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+                padding: 20px 0;
+            }
+
+            .nav-item {
+                margin: 15px 0;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .hero-heading {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo">Layout</a>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="#features" class="nav-link">Layanan</a></li>
+                    <li class="nav-item"><a href="#about" class="nav-link">About Us</a></li>
+                    <li class="nav-item"><a href="#contact" class="nav-link">Kontak</a></li>
+                    <li class="nav-item"><a href="#" class="btn btn-primary">Order Now</a></li>
+                    <li class="nav-item"><a href="#call-me" class="btn btn-outline">Call Me</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-heading">Tingkatkan Bisnis Anda dengan <span>Website Profesional</span></h1>
+                    <p class="hero-description">Layout menyediakan jasa pembuatan website dan desain grafis terbaik
+                        untuk membantu bisnis Anda tumbuh di era digital.</p>
+                    <div class="hero-buttons">
+                        <a href="#" class="btn btn-primary">Order Sekarang</a>
+                        <a href="#call-me" class="btn btn-outline">Hubungi Kami</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="https://placehold.co/600x500/977DFF/FFFFFF?text=Layout+Creative"
+                        alt="Layout Creative Agency">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Mengapa Memilih Layout?</h2>
+                <p>Kami menawarkan solusi lengkap untuk kebutuhan digital bisnis Anda</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <h3 class="feature-title">Desain Menarik</h3>
+                    <p class="feature-description">Desain modern dan elegan yang mencerminkan identitas brand Anda</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Responsif</h3>
+                    <p class="feature-description">Website yang tampil sempurna di semua perangkat dan ukuran layar</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="feature-title">Cepat & Optimal</h3>
+                    <p class="feature-description">Website dengan performa terbaik dan kecepatan loading yang optimal
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3 class="feature-title">Keamanan Terjamin</h3>
+                    <p class="feature-description">Proteksi maksimal untuk website dan data bisnis Anda</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3 class="feature-title">Dukungan 24/7</h3>
+                    <p class="feature-description">Tim support siap membantu Anda kapanpun dibutuhkan</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <h3 class="feature-title">Harga Terjangkau</h3>
+                    <p class="feature-description">Kualitas premium dengan harga yang kompetitif dan transparan</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-image">
+                    <img src="https://placehold.co/500x400/2E49FA/FFFFFF?text=Tentang+Layout" alt="Tentang Layout">
+                </div>
+                <div class="about-text">
+                    <h2>Tentang Layout</h2>
+                    <p>Layout adalah startup kreatif yang berfokus pada penyediaan jasa pembuatan website dan desain
+                        grafis profesional. Sejak didirikan pada tahun 2020, kami telah membantu ratusan bisnis
+                        meningkatkan kehadiran digital mereka.</p>
+                    <p>Tim kami terdiri dari para ahli dalam bidang web development, UI/UX design, dan digital marketing
+                        yang siap mewujudkan visi digital bisnis Anda.</p>
+                    <p>Kami percaya bahwa setiap bisnis memiliki cerita unik yang layak untuk diceritakan melalui desain
+                        yang menarik dan fungsional.</p>
+                    <a href="#" class="btn btn-primary">Pelajari Lebih Lanjut</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call Me Section -->
+    <section class="call-me" id="call-me">
+        <div class="container">
+            <h2>Butuh Konsultasi?</h2>
+            <p>Jangan ragu untuk menghubungi kami. Tim Layout siap membantu mewujudkan website impian Anda.</p>
+            <a href="tel:+62123456789" class="btn btn-outline">Call Me Now</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Layout</h3>
+                    <p>Membantu bisnis Anda tumbuh dengan solusi digital kreatif dan inovatif.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Layanan</h3>
+                    <a href="#">Web Development</a>
+                    <a href="#">UI/UX Design</a>
+                    <a href="#">Desain Grafis</a>
+                    <a href="#">Digital Marketing</a>
+                </div>
+                <div class="footer-column">
+                    <h3>Kontak</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> Jl. Digital No. 123, Jakarta</p>
+                    <p><i class="fas fa-phone"></i> +62 123 456 789</p>
+                    <p><i class="fas fa-envelope"></i> hello@layout.com</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Layout. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const hamburger = document.querySelector(".hamburger");
+        const navMenu = document.querySelector(".nav-menu");
+
+        hamburger.addEventListener("click", () => {
+            hamburger.classList.toggle("active");
+            navMenu.classList.toggle("active");
+        });
+
+        document.querySelectorAll(".nav-link").forEach(n => n.addEventListener("click", () => {
+            hamburger.classList.remove("active");
+            navMenu.classList.remove("active");
+        }));
+
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Scroll Animation
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .about-image, .about-text').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+
+</html>
