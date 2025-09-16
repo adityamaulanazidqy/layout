@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Layout - Jasa Pembuatan Website & Desain Grafis Profesional</title>
+    <title>Dashboard - Jasa Pembuatan Website & Desain Grafis Profesional</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
@@ -84,7 +84,7 @@
         }
 
         .nav-item {
-            margin-left: 25px;
+            margin-left: 15px;
             position: relative;
         }
 
@@ -182,6 +182,91 @@
             background-color: var(--dark-color);
             transition: all 0.3s ease;
             border-radius: 3px;
+        }
+
+        /* Profile Section in Navigation */
+        .profile-menu {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-left: 15px;
+        }
+
+        .profile-toggle {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .profile-toggle:hover {
+            background-color: rgba(151, 125, 255, 0.1);
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+            border: 2px solid var(--primary-color);
+        }
+
+        .profile-name {
+            font-weight: 500;
+            color: var(--dark-color);
+            margin-right: 5px;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 200px;
+            background-color: var(--light-color);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+            margin-top: 10px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .profile-menu.active .profile-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .profile-dropdown a {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            color: var(--dark-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .profile-dropdown a:hover {
+            background-color: rgba(151, 125, 255, 0.1);
+            color: var(--primary-color);
+        }
+
+        .profile-dropdown a i {
+            margin-right: 10px;
+            width: 18px;
+            text-align: center;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: rgba(0, 0, 0, 0.1);
+            margin: 5px 0;
         }
 
         /* Hero Section */
@@ -360,6 +445,7 @@
             transform: scaleX(0);
             transform-origin: left;
             transition: transform 0.3s ease;
+            z-index: 1;
         }
 
         .feature-card:hover {
@@ -523,6 +609,8 @@
         .call-me h2 {
             font-size: 2.5rem;
             margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
         }
 
         .call-me p {
@@ -531,12 +619,16 @@
             max-width: 700px;
             margin-left: auto;
             margin-right: auto;
+            position: relative;
+            z-index: 2;
         }
 
         .call-me .btn-outline {
             background-color: var(--light-color);
             color: var(--primary-color);
             border-color: var(--light-color);
+            position: relative;
+            z-index: 2;
         }
 
         .call-me .btn-outline:hover {
@@ -710,6 +802,28 @@
             .hamburger.active .bar:nth-child(3) {
                 transform: translateY(-9px) rotate(-45deg);
             }
+
+            .profile-menu {
+                margin-left: 0;
+                margin-top: 20px;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .profile-dropdown {
+                position: static;
+                width: 100%;
+                box-shadow: none;
+                margin-top: 10px;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                display: none;
+            }
+
+            .profile-menu.active .profile-dropdown {
+                display: block;
+            }
         }
 
         @media (max-width: 768px) {
@@ -739,6 +853,14 @@
 
             .social-links {
                 justify-content: center;
+            }
+
+            .profile-toggle {
+                padding: 5px 8px;
+            }
+
+            .profile-name {
+                display: none;
             }
         }
 
@@ -787,6 +909,23 @@
                     <li class="nav-item"><a href="#contact" class="nav-link">Kontak</a></li>
                     <li class="nav-item"><a href="#" class="btn btn-primary order">Order Now</a></li>
                     <li class="nav-item"><a href="#call-me" class="btn btn-outline">Call Me</a></li>
+
+                    <!-- Profile Menu -->
+                    <li class="nav-item profile-menu" id="profileMenu">
+                        <div class="profile-toggle">
+                            <img src="https://placehold.co/40x40/977DFF/FFFFFF?text=U" alt="Profile" class="profile-img"
+                                id="profileImage">
+                            <span class="profile-name" id="profileName">User Name</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="profile-dropdown">
+                            <a href="#"><i class="fas fa-user"></i> Profil Saya</a>
+                            <a href="#"><i class="fas fa-cog"></i> Pengaturan</a>
+                            <a href="#"><i class="fas fa-history"></i> Riwayat</a>
+                            <div class="divider"></div>
+                            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </li>
                 </ul>
                 <div class="hamburger">
                     <span class="bar"></span>
@@ -802,17 +941,16 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <h1 class="hero-heading">Tingkatkan Bisnis Anda dengan <span>Website Profesional</span></h1>
-                    <p class="hero-description">Layout menyediakan jasa pembuatan website dan desain grafis terbaik
-                        untuk membantu bisnis Anda tumbuh di era digital.</p>
+                    <h1 class="hero-heading">Selamat Datang di <span>Dashboard Layout</span></h1>
+                    <p class="hero-description">Kelola website dan desain grafis Anda dengan mudah melalui dashboard
+                        kami yang intuitif dan powerful.</p>
                     <div class="hero-buttons">
-                        <a href="#" class="btn btn-primary">Order Sekarang</a>
-                        <a href="#call-me" class="btn btn-outline">Hubungi Kami</a>
+                        <a href="#" class="btn btn-primary">Kelola Proyek</a>
+                        <a href="#call-me" class="btn btn-outline">Dukungan</a>
                     </div>
                 </div>
                 <div class="hero-image">
-                    <img src="https://placehold.co/600x500/977DFF/FFFFFF?text=Layout+Creative"
-                        alt="Layout Creative Agency">
+                    <img src="https://placehold.co/600x500/977DFF/FFFFFF?text=Dashboard+Layout" alt="Layout Dashboard">
                 </div>
             </div>
         </div>
@@ -822,52 +960,55 @@
     <section class="features" id="features">
         <div class="container">
             <div class="section-title">
-                <h2>Mengapa Memilih Layout?</h2>
-                <p>Kami menawarkan solusi lengkap untuk kebutuhan digital bisnis Anda</p>
+                <h2>Fitur Dashboard</h2>
+                <p>Kelola semua kebutuhan digital bisnis Anda dalam satu tempat</p>
             </div>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-paint-brush"></i>
+                        <i class="fas fa-project-diagram"></i>
                     </div>
-                    <h3 class="feature-title">Desain Menarik</h3>
-                    <p class="feature-description">Desain modern dan elegan yang mencerminkan identitas brand Anda</p>
+                    <h3 class="feature-title">Kelola Proyek</h3>
+                    <p class="feature-description">Pantau dan kelola semua proyek website dan desain Anda dari satu
+                        dashboard</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-mobile-alt"></i>
+                        <i class="fas fa-chart-line"></i>
                     </div>
-                    <h3 class="feature-title">Responsif</h3>
-                    <p class="feature-description">Website yang tampil sempurna di semua perangkat dan ukuran layar</p>
+                    <h3 class="feature-title">Analitik</h3>
+                    <p class="feature-description">Akses data analitik performa website dan kampanye marketing Anda</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-bolt"></i>
+                        <i class="fas fa-file-invoice"></i>
                     </div>
-                    <h3 class="feature-title">Cepat & Optimal</h3>
-                    <p class="feature-description">Website dengan performa terbaik dan kecepatan loading yang optimal
+                    <h3 class="feature-title">Faktur & Pembayaran</h3>
+                    <p class="feature-description">Kelajari riwayat pembayaran dan unduh faktur untuk semua layanan</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3 class="feature-title">Dukungan Langsung</h3>
+                    <p class="feature-description">Hubungi tim support kami langsung dari dashboard untuk bantuan cepat
                     </p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-lock"></i>
+                        <i class="fas fa-cloud-upload-alt"></i>
                     </div>
-                    <h3 class="feature-title">Keamanan Terjamin</h3>
-                    <p class="feature-description">Proteksi maksimal untuk website dan data bisnis Anda</p>
+                    <h3 class="feature-title">Unggah Konten</h3>
+                    <p class="feature-description">Unggah dan kelola konten website Anda dengan mudah melalui editor
+                        visual</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-headset"></i>
+                        <i class="fas fa-bell"></i>
                     </div>
-                    <h3 class="feature-title">Dukungan 24/7</h3>
-                    <p class="feature-description">Tim support siap membantu Anda kapanpun dibutuhkan</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-money-bill-wave"></i>
-                    </div>
-                    <h3 class="feature-title">Harga Terjangkau</h3>
-                    <p class="feature-description">Kualitas premium dengan harga yang kompetitif dan transparan</p>
+                    <h3 class="feature-title">Notifikasi</h3>
+                    <p class="feature-description">Dapatkan pemberitahuan tentang pembaruan, pemeliharaan, dan penawaran
+                        khusus</p>
                 </div>
             </div>
         </div>
@@ -878,18 +1019,17 @@
         <div class="container">
             <div class="about-content">
                 <div class="about-image">
-                    <img src="https://placehold.co/500x400/2E49FA/FFFFFF?text=Tentang+Layout" alt="Tentang Layout">
+                    <img src="https://placehold.co/500x400/2E49FA/FFFFFF?text=Dashboard+Overview"
+                        alt="Dashboard Overview">
                 </div>
                 <div class="about-text">
-                    <h2>Tentang Layout</h2>
-                    <p>Layout adalah startup kreatif yang berfokus pada penyediaan jasa pembuatan website dan desain
-                        grafis profesional. Sejak didirikan pada tahun 2020, kami telah membantu ratusan bisnis
-                        meningkatkan kehadiran digital mereka.</p>
-                    <p>Tim kami terdiri dari para ahli dalam bidang web development, UI/UX design, dan digital marketing
-                        yang siap mewujudkan visi digital bisnis Anda.</p>
-                    <p>Kami percaya bahwa setiap bisnis memiliki cerita unik yang layak untuk diceritakan melalui desain
-                        yang menarik dan fungsional.</p>
-                    <a href="#" class="btn btn-primary">Pelajari Lebih Lanjut</a>
+                    <h2>Tentang Dashboard Layout</h2>
+                    <p>Dashboard Layout dirancang khusus untuk memudahkan Anda mengelola semua aspek website dan layanan
+                        desain grafis. Dengan antarmuka yang intuitif, Anda dapat memantau progres proyek, menganalisis
+                        performa, dan berkomunikasi dengan tim kami.</p>
+                    <p>Kami terus mengembangkan fitur-fitur baru berdasarkan masukan dari klien kami untuk memastikan
+                        pengalaman terbaik dalam mengelola kehadiran digital bisnis Anda.</p>
+                    <a href="#" class="btn btn-primary">Jelajahi Fitur</a>
                 </div>
             </div>
         </div>
@@ -898,9 +1038,10 @@
     <!-- Call Me Section -->
     <section class="call-me" id="call-me">
         <div class="container">
-            <h2>Butuh Konsultasi?</h2>
-            <p>Jangan ragu untuk menghubungi kami. Tim Layout siap membantu mewujudkan website impian Anda.</p>
-            <a href="tel:+62123456789" class="btn btn-outline">Call Me Now</a>
+            <h2>Butuh Bantuan?</h2>
+            <p>Tim support kami siap membantu Anda 24/7. Jangan ragu untuk menghubungi kami melalui chat langsung,
+                telepon, atau email.</p>
+            <a href="tel:+62123456789" class="btn btn-outline">Hubungi Support</a>
         </div>
     </section>
 
@@ -939,6 +1080,7 @@
     </footer>
 
     <script>
+        // [Kode JavaScript yang sudah ada tetap sama]
         // Mobile Menu Toggle
         const order = document.querySelector(".order")
         const hamburger = document.querySelector(".hamburger");
@@ -970,6 +1112,22 @@
             document.querySelectorAll(".nav-link").forEach(link => link.classList.remove("active"));
             n.classList.add("active");
         }));
+
+        // Profile Menu Toggle
+        const profileMenu = document.getElementById("profileMenu");
+        const profileToggle = document.querySelector(".profile-toggle");
+
+        profileToggle.addEventListener("click", (e) => {
+            e.stopPropagation();
+            profileMenu.classList.toggle("active");
+        });
+
+        // Close profile menu when clicking outside
+        document.addEventListener("click", (e) => {
+            if (!profileMenu.contains(e.target)) {
+                profileMenu.classList.remove("active");
+            }
+        });
 
         // Smooth Scrolling
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -1069,6 +1227,126 @@
             // Initialize header state
             if (window.scrollY > 50) {
                 header.classList.add('scrolled');
+            }
+
+            // Check authentication first
+            checkAuthentication();
+        });
+
+        // Check if user is authenticated
+        function checkAuthentication() {
+            const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+            if (!token) {
+                // No token found, redirect to login
+                console.log('No authentication token found, redirecting to login');
+                window.location.href = 'login.html';
+                return false;
+            }
+
+            // Token exists, fetch user profile
+            fetchUserProfile();
+            return true;
+        }
+
+        // Fetch user profile from API
+        async function fetchUserProfile() {
+            try {
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+                if (!token) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                const response = await fetch('https://separately-refers-architect-feed.trycloudflare.com/api/v1/profile', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    // Update profile information
+                    document.getElementById('profileName').textContent = data.username || data.email;
+
+                    // Fetch profile image if available
+                    if (data.profile_path) {
+                        fetchProfileImage(data.profile_path, token);
+                    }
+                } else if (response.status === 401) {
+                    // Token expired or invalid
+                    console.log('Token expired or invalid, clearing storage and redirecting to login');
+                    clearAuthData();
+                    window.location.href = 'login.html';
+                } else {
+                    console.error('Failed to fetch profile:', response.status);
+                    // Don't redirect on other errors, just show the dashboard without profile data
+                }
+            } catch (error) {
+                console.error('Error fetching profile:', error);
+                // Don't redirect on network errors, just show the dashboard without profile data
+            }
+        }
+
+        // Fetch profile image from server
+        async function fetchProfileImage(pathImage, token) {
+            try {
+                const response = await fetch('https://separately-refers-architect-feed.trycloudflare.com/api/v1/image?path=' + pathImage, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const imageUrl = URL.createObjectURL(blob);
+                    document.getElementById('profileImage').src = imageUrl;
+                }
+            } catch (error) {
+                console.error('Error fetching profile image:', error);
+            }
+        }
+
+        // Clear authentication data
+        function clearAuthData() {
+            localStorage.removeItem('token');
+            sessionStorage.removeItem('token');
+            // Clear cookie as well if needed
+            document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        }
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            try {
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                if (token) {
+                    await fetch('https://separately-refers-architect-feed.trycloudflare.com/api/v1/logout', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                }
+
+                // Clear all authentication data
+                clearAuthData();
+
+                // Redirect to home page
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Error during logout:', error);
+                // Still clear data and redirect even if API call fails
+                clearAuthData();
+                window.location.href = 'index.html';
             }
         });
     </script>
