@@ -18,6 +18,8 @@
             --text-color: #333333;
             --success-color: #28a745;
             --error-color: #dc3545;
+            --success-gradient: linear-gradient(135deg, #28a745, #20c997);
+            --error-gradient: linear-gradient(135deg, #dc3545, #e83e8c);
         }
 
         * {
@@ -204,6 +206,7 @@
             padding: 8px 12px;
             border-radius: 50px;
             transition: all 0.3s ease;
+            position: relative;
         }
 
         .profile-toggle:hover {
@@ -310,6 +313,7 @@
             margin-bottom: 15px;
             position: relative;
             display: inline-block;
+            font-weight: 700;
         }
 
         .section-title h2:after {
@@ -329,18 +333,23 @@
             color: #666;
             max-width: 700px;
             margin: 0 auto;
+            line-height: 1.6;
         }
 
+        /* PERBAIKAN PADDING ORDER-FORM */
         .order-form {
             background-color: var(--light-color);
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            padding: 40px;
+            padding: 50px !important;
+            /* Menambahkan !important untuk memastikan padding diterapkan */
             margin: 20px auto;
             border: 1px solid rgba(151, 125, 255, 0.1);
             position: relative;
             z-index: 1;
             max-width: 800px;
+            box-sizing: border-box;
+            /* Memastikan padding dihitung dengan benar */
         }
 
         .form-group {
@@ -530,25 +539,6 @@
             margin-top: 10px;
         }
 
-        .alert {
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .alert-error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
         .form-steps {
             display: flex;
             justify-content: center;
@@ -633,6 +623,233 @@
             margin-top: 30px;
         }
 
+        /* MODERN NOTIFICATION STYLES */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 400px;
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .notification {
+            position: relative;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 20px;
+            display: flex;
+            align-items: flex-start;
+            animation: slideInRight 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            transform: translateX(400px);
+            opacity: 0;
+            border-left: 4px solid;
+            overflow: hidden;
+        }
+
+        .notification::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.7) 100%);
+        }
+
+        .notification.success {
+            border-left-color: var(--success-color);
+            background: linear-gradient(135deg, #f8fff9, #ffffff);
+        }
+
+        .notification.error {
+            border-left-color: var(--error-color);
+            background: linear-gradient(135deg, #fff8f9, #ffffff);
+        }
+
+        .notification-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+            font-size: 20px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notification.success .notification-icon {
+            background: var(--success-gradient);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .notification.error .notification-icon {
+            background: var(--error-gradient);
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .notification-icon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%);
+            border-radius: 50%;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+
+        .notification.success .notification-title {
+            color: var(--success-color);
+        }
+
+        .notification.error .notification-title {
+            color: var(--error-color);
+        }
+
+        .notification-message {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .notification-progress {
+            height: 3px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .notification-progress-bar {
+            height: 100%;
+            width: 100%;
+            border-radius: 2px;
+            transition: width 0.1s linear;
+        }
+
+        .notification.success .notification-progress-bar {
+            background: var(--success-gradient);
+        }
+
+        .notification.error .notification-progress-bar {
+            background: var(--error-gradient);
+        }
+
+        .notification-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: #999;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .notification-close:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: #555;
+        }
+
+        /* Confetti effect for success */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: var(--primary-color);
+            opacity: 0;
+            z-index: 10000;
+            pointer-events: none;
+        }
+
+        /* Modal for detailed messages */
+        .notification-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .notification-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+
+        .notification-modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .modal-message {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
         /* Animations */
         @keyframes fadeInUp {
             from {
@@ -653,6 +870,42 @@
 
             to {
                 opacity: 1;
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
             }
         }
 
@@ -730,6 +983,24 @@
             .checkbox-group {
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             }
+
+            /* Responsive notifications for tablet */
+            .notification-container {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+                width: auto;
+            }
+
+            .notification {
+                padding: 15px;
+            }
+
+            .notification-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -741,8 +1012,10 @@
                 font-size: 2rem;
             }
 
+            /* PERBAIKAN PADDING ORDER-FORM UNTUK TABLET */
             .order-form {
-                padding: 30px 20px;
+                padding: 40px 30px !important;
+                /* Menambahkan !important untuk memastikan padding diterapkan */
             }
 
             .form-steps {
@@ -773,6 +1046,48 @@
             .btn {
                 width: 100%;
             }
+
+            /* Responsive notifications for mobile */
+            .notification-container {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+            }
+
+            .notification {
+                padding: 12px 15px;
+            }
+
+            .notification-title {
+                font-size: 16px;
+            }
+
+            .notification-message {
+                font-size: 13px;
+            }
+
+            .notification-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+                margin-right: 10px;
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+
+            .modal-icon {
+                font-size: 50px;
+            }
+
+            .modal-title {
+                font-size: 20px;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
         }
 
         @media (max-width: 480px) {
@@ -788,6 +1103,12 @@
                 font-size: 24px;
             }
 
+            /* PERBAIKAN PADDING ORDER-FORM UNTUK MOBILE */
+            .order-form {
+                padding: 30px 20px !important;
+                /* Menambahkan !important untuk memastikan padding diterapkan */
+            }
+
             .checkbox-group {
                 grid-template-columns: 1fr;
             }
@@ -798,6 +1119,18 @@
 
             .profile-name {
                 display: none;
+            }
+
+            /* Mobile notifications */
+            .notification {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .notification-icon {
+                margin-right: 0;
+                margin-bottom: 10px;
+                align-self: center;
             }
         }
     </style>
@@ -810,10 +1143,10 @@
             <nav class="navbar">
                 <a href="index.html" class="logo"><i class="fas fa-paint-brush"></i>Layout</a>
                 <ul class="nav-menu">
-                    <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="index.html#features" class="nav-link">Layanan</a></li>
-                    <li class="nav-item"><a href="index.html#about" class="nav-link">About Us</a></li>
-                    <li class="nav-item"><a href="index.html#contact" class="nav-link">Kontak</a></li>
+                    <li class="nav-item"><a href="dashboard.html" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="dashboard.html" class="nav-link">Layanan</a></li>
+                    <li class="nav-item"><a href="dashboard.html" class="nav-link">About Us</a></li>
+                    <li class="nav-item"><a href="dashboard.html" class="nav-link">Kontak</a></li>
                     <li class="nav-item"><a href="#call-me" class="btn btn-outline">Call Me</a></li>
 
                     <!-- Profile Menu -->
@@ -825,8 +1158,8 @@
                             <i class="fas fa-chevron-down"></i>
                         </div>
                         <div class="profile-dropdown">
-                            <a href="#"><i class="fas fa-user"></i> Profil Saya</a>
-                            <a href="#"><i class="fas fa-cog"></i> Pengaturan</a>
+                            <!-- <a href="#"><i class="fas fa-user"></i> Profil Saya</a> -->
+                            <!-- <a href="setting.html"><i class="fas fa-cog"></i> Pengaturan</a> -->
                             <a href="#"><i class="fas fa-history"></i> Riwayat</a>
                             <div class="divider"></div>
                             <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -864,15 +1197,6 @@
                     <div class="step-number">3</div>
                     <div class="step-text">Desain & Referensi</div>
                 </div>
-            </div>
-
-            <!-- Alert Messages -->
-            <div class="alert alert-success" id="successAlert">
-                <i class="fas fa-check-circle"></i> <span>Pesanan berhasil dikirim!</span>
-            </div>
-
-            <div class="alert alert-error" id="errorAlert">
-                <i class="fas fa-exclamation-circle"></i> <span>Terjadi kesalahan. Silakan coba lagi.</span>
             </div>
 
             <!-- Order Form -->
@@ -968,14 +1292,25 @@
         </div>
     </section>
 
+    <!-- Notification System -->
+    <div class="notification-container" id="notification-container"></div>
+
+    <!-- Modal for detailed notifications -->
+    <div class="notification-modal" id="notificationModal">
+        <div class="modal-content">
+            <div class="modal-icon" id="modalIcon"></div>
+            <h3 class="modal-title" id="modalTitle"></h3>
+            <p class="modal-message" id="modalMessage"></p>
+            <div class="modal-actions">
+                <button class="btn btn-primary" id="modalCloseBtn">Tutup</button>
+                <button class="btn btn-outline" id="modalActionBtn" style="display: none;">Lihat Detail</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Mobile Menu Toggle
-            var token = localStorage.getItem('token') || sessionStorage.getItem('token');
-            if (!token) {
-                window.location.href = 'login.html';
-            }
-
             const hamburger = document.querySelector(".hamburger");
             const navMenu = document.querySelector(".nav-menu");
             const body = document.body;
@@ -1025,56 +1360,309 @@
                 }
             });
 
-            // Check authentication and fetch profile
-            function checkAuthentication() {
-                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+            // API Base URL
+            const API_BASE_URL = 'http://localhost:3749/api/v1';
+
+            // Token management
+            let isRefreshing = false;
+            let failedQueue = [];
+
+            // Process queue after token refresh
+            function processQueue(error, token = null) {
+                failedQueue.forEach(promise => {
+                    if (error) {
+                        promise.reject(error);
+                    } else {
+                        promise.resolve(token);
+                    }
+                });
+                failedQueue = [];
+            }
+
+            // Get token from storage
+            function getToken() {
+                return localStorage.getItem('token') || sessionStorage.getItem('token');
+            }
+
+            // Set token in storage
+            function setToken(token) {
+                // Simpan di tempat yang sama dengan token sebelumnya
+                if (localStorage.getItem('token')) {
+                    localStorage.setItem('token', token);
+                } else {
+                    sessionStorage.setItem('token', token);
+                }
+            }
+
+            // Clear authentication data
+            function clearAuthData() {
+                localStorage.removeItem('token');
+                sessionStorage.removeItem('token');
+                localStorage.removeItem('role');
+                // Tidak perlu clear refresh_token karena itu HttpOnly cookie
+            }
+
+            // Redirect to login page
+            function redirectToLogin() {
+                clearAuthData();
+                window.location.href = 'login.html';
+            }
+
+            // Refresh token function
+            async function refreshToken() {
+                if (isRefreshing) {
+                    return new Promise((resolve, reject) => {
+                        failedQueue.push({ resolve, reject });
+                    });
+                }
+
+                isRefreshing = true;
+
+                try {
+                    console.log('Attempting to refresh token...');
+                    const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
+                        method: 'POST',
+                        credentials: 'include', // Penting untuk mengirim cookies
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    });
+
+                    console.log('Refresh token response status:', response.status);
+
+                    if (!response.ok) {
+                        // Jika status 401, berarti refresh token juga expired/invalid
+                        if (response.status === 401) {
+                            console.log('Refresh token expired or invalid');
+                            throw new Error('REFRESH_TOKEN_EXPIRED');
+                        }
+                        throw new Error(`Refresh failed: ${response.status} ${response.statusText}`);
+                    }
+
+                    const data = await response.json();
+                    console.log('Refresh token response:', data);
+
+                    if (!data.access_token) {
+                        throw new Error('No access token in response');
+                    }
+
+                    // Store the new access token
+                    setToken(data.access_token);
+
+                    // Process all queued requests
+                    processQueue(null, data.access_token);
+
+                    console.log('Token refreshed successfully');
+                    return data.access_token;
+                } catch (error) {
+                    console.error('Token refresh failed:', error);
+
+                    // Jika refresh token expired, redirect ke login
+                    if (error.message === 'REFRESH_TOKEN_EXPIRED') {
+                        console.log('Redirecting to login due to expired refresh token');
+                        redirectToLogin();
+                    }
+
+                    processQueue(error, null);
+                    throw error;
+                } finally {
+                    isRefreshing = false;
+                }
+            }
+
+            // Enhanced fetch with automatic token refresh
+            async function authFetch(url, options = {}) {
+                let token = getToken();
+
+                if (!token) {
+                    console.log('No token found, redirecting to login');
+                    redirectToLogin();
+                    return;
+                }
+
+                // Set default headers
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                    ...options.headers
+                };
+
+                try {
+                    // First attempt
+                    let response = await fetch(`${API_BASE_URL}${url}`, {
+                        ...options,
+                        headers,
+                        credentials: 'include'
+                    });
+
+                    console.log(`API ${url} response status:`, response.status);
+
+                    // If token is expired, try to refresh
+                    if (response.status === 401) {
+                        console.log('Access token expired, attempting refresh...');
+                        try {
+                            const newToken = await refreshToken();
+                            console.log('New token obtained:', newToken);
+
+                            // Retry request with new token
+                            headers['Authorization'] = `Bearer ${newToken}`;
+                            response = await fetch(`${API_BASE_URL}${url}`, {
+                                ...options,
+                                headers,
+                                credentials: 'include'
+                            });
+
+                            return response;
+                        } catch (refreshError) {
+                            console.error('Refresh token failed:', refreshError);
+                            redirectToLogin();
+                            throw refreshError;
+                        }
+                    }
+
+                    return response;
+                } catch (error) {
+                    console.error(`Auth fetch error for ${url}:`, error);
+                    throw error;
+                }
+            }
+
+            // Universal API request handler
+            async function apiRequest(endpoint, options = {}) {
+                try {
+                    const response = await authFetch(endpoint, options);
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+                        throw new Error(errorData.message || `HTTP ${response.status}`);
+                    }
+
+                    return await response.json();
+                } catch (error) {
+                    console.error(`API Request failed for ${endpoint}:`, error);
+                    throw error;
+                }
+            }
+
+            // Universal API request handler for FormData (tanpa Content-Type header)
+            async function apiRequestFormData(endpoint, options = {}) {
+                try {
+                    let token = getToken();
+
+                    if (!token) {
+                        console.log('No token found, redirecting to login');
+                        redirectToLogin();
+                        return;
+                    }
+
+                    // Set headers tanpa Content-Type untuk FormData
+                    const headers = {
+                        'Authorization': `Bearer ${token}`,
+                        ...options.headers
+                    };
+
+                    // Remove Content-Type header untuk FormData
+                    delete headers['Content-Type'];
+
+                    let response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                        ...options,
+                        headers,
+                        credentials: 'include'
+                    });
+
+                    console.log(`API ${endpoint} response status:`, response.status);
+
+                    // If token is expired, try to refresh
+                    if (response.status === 401) {
+                        console.log('Access token expired, attempting refresh...');
+                        try {
+                            const newToken = await refreshToken();
+                            console.log('New token obtained:', newToken);
+
+                            // Retry request with new token
+                            headers['Authorization'] = `Bearer ${newToken}`;
+                            response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                                ...options,
+                                headers,
+                                credentials: 'include'
+                            });
+
+                            return await response.json();
+                        } catch (refreshError) {
+                            console.error('Refresh token failed:', refreshError);
+                            redirectToLogin();
+                            throw refreshError;
+                        }
+                    }
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+                        throw new Error(errorData.message || `HTTP ${response.status}`);
+                    }
+
+                    return await response.json();
+                } catch (error) {
+                    console.error(`API Request failed for ${endpoint}:`, error);
+                    throw error;
+                }
+            }
+
+            // Check if user is authenticated
+            async function checkAuthentication() {
+                const token = getToken();
 
                 if (!token) {
                     console.log('No authentication token found, redirecting to login');
-                    window.location.href = 'login.html';
+                    redirectToLogin();
                     return false;
                 }
 
-                // Token exists, fetch user profile
-                fetchUserProfile();
-                return true;
+                try {
+                    // Cek token expiration
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    const exp = payload.exp * 1000;
+                    const now = Date.now();
+                    console.log('Token expires at:', new Date(exp));
+                    console.log('Current time:', new Date(now));
+                    console.log('Time until expiration:', (exp - now) / 1000 / 60, 'minutes');
+
+                    // Verify token and get user role
+                    const data = await apiRequest('/profile/role');
+                    const role = data.role;
+                    localStorage.setItem("role", role);
+                    console.log('User role:', role);
+
+                    // If user is admin, redirect to admin dashboard
+                    if (role === 'admin') {
+                        console.log('Admin user detected, redirecting to admin dashboard');
+                        window.location.href = 'dashboard_admin.html';
+                        return false;
+                    }
+
+                    // If user is client, continue with normal flow
+                    console.log('Client user detected, continuing to order page');
+
+                    // Token exists, fetch user profile
+                    await fetchUserProfile();
+                    return true;
+                } catch (error) {
+                    console.error('Error checking authentication:', error);
+                    redirectToLogin();
+                    return false;
+                }
             }
 
             // Fetch user profile from API
             async function fetchUserProfile() {
                 try {
-                    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                    const data = await apiRequest('/profile');
 
-                    if (!token) {
-                        window.location.href = 'login.html';
-                        return;
-                    }
+                    // Update profile information
+                    document.getElementById('profileName').textContent = data.username || data.email;
 
-                    const response = await fetch('https://separately-refers-architect-feed.trycloudflare.com/api/v1/profile', {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        }
-                    });
-
-                    if (response.ok) {
-                        const data = await response.json();
-
-                        // Update profile information
-                        document.getElementById('profileName').textContent = data.username || data.email;
-
-                        // Fetch profile image if available
-                        if (data.profile_path) {
-                            fetchProfileImage(data.profile_path, token);
-                        }
-                    } else if (response.status === 401) {
-                        // Token expired or invalid
-                        console.log('Token expired or invalid, clearing storage and redirecting to login');
-                        clearAuthData();
-                        window.location.href = 'login.html';
-                    } else {
-                        console.error('Failed to fetch profile:', response.status);
+                    // Fetch profile image if available
+                    if (data.profile_path) {
+                        await fetchProfileImage(data.profile_path);
                     }
                 } catch (error) {
                     console.error('Error fetching profile:', error);
@@ -1082,15 +1670,9 @@
             }
 
             // Fetch profile image from server
-            async function fetchProfileImage(pathImage, token) {
+            async function fetchProfileImage(pathImage) {
                 try {
-                    const response = await fetch('https://separately-refers-architect-feed.trycloudflare.com/api/v1/image?path=' + pathImage, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        },
-                    });
+                    const response = await authFetch(`/profile/image?path=${encodeURIComponent(pathImage)}`);
 
                     if (response.ok) {
                         const blob = await response.blob();
@@ -1102,41 +1684,50 @@
                 }
             }
 
-            // Clear authentication data
-            function clearAuthData() {
-                localStorage.removeItem('token');
-                sessionStorage.removeItem('token');
-                document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-            }
-
             // Logout functionality
             document.getElementById('logoutBtn').addEventListener('click', async (e) => {
                 e.preventDefault();
 
                 try {
-                    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-                    if (token) {
-                        await fetch('https://separately-refers-architect-feed.trycloudflare.com/api/v1/logout', {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': `Bearer ${token}`,
-                                'Content-Type': 'application/json'
-                            }
-                        });
-                    }
-
-                    // Clear all authentication data
-                    clearAuthData();
-
-                    // Redirect to home page
-                    window.location.href = 'index.html';
+                    // Panggil logout endpoint untuk clear server-side session
+                    await fetch(`${API_BASE_URL}/logout`, {
+                        method: 'POST',
+                        credentials: 'include'
+                    });
                 } catch (error) {
-                    console.error('Error during logout:', error);
-                    // Still clear data and redirect even if API call fails
+                    console.error('Error during logout API call:', error);
+                } finally {
+                    // Clear client-side data dan redirect
                     clearAuthData();
                     window.location.href = 'index.html';
                 }
             });
+
+            // Auto refresh token before expiration (optional)
+            function setupTokenAutoRefresh() {
+                // Check token expiration every minute
+                setInterval(async () => {
+                    const token = getToken();
+                    if (!token) return;
+
+                    try {
+                        // Decode token to check expiration
+                        const payload = JSON.parse(atob(token.split('.')[1]));
+                        const exp = payload.exp * 1000;
+                        const now = Date.now();
+                        const bufferTime = 5 * 60 * 1000; // 5 minutes buffer
+
+                        // Refresh if token expires in less than buffer time
+                        if (exp - now < bufferTime) {
+                            console.log('Auto-refreshing token before expiration...');
+                            await refreshToken();
+                            console.log('Token auto-refreshed successfully');
+                        }
+                    } catch (error) {
+                        console.error('Error in token auto-refresh:', error);
+                    }
+                }, 60 * 1000);
+            }
 
             // Form Elements
             const step1Content = document.getElementById('step1-content');
@@ -1151,58 +1742,171 @@
             const prevToStep2 = document.getElementById('prevToStep2');
             const submitOrder = document.getElementById('submitOrder');
             const orderForm = document.getElementById('orderForm');
-            const successAlert = document.getElementById('successAlert');
-            const errorAlert = document.getElementById('errorAlert');
             const colorFilter = document.getElementById('colorFilter');
 
-            // API Base URL
-            const API_BASE_URL = 'https://separately-refers-architect-feed.trycloudflare.com/api/v1'; // Ganti dengan URL API Anda
+            // Modal elements
+            const notificationModal = document.getElementById('notificationModal');
+            const modalIcon = document.getElementById('modalIcon');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+            const modalCloseBtn = document.getElementById('modalCloseBtn');
+            const modalActionBtn = document.getElementById('modalActionBtn');
+
+            // Enhanced Notification system
+            function showNotification(type, title, message, duration = 5000, showProgress = true) {
+                const container = document.getElementById('notification-container');
+
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+
+                // Set icon based on type
+                const icon = type === 'success' ? 'fa-check' : 'fa-exclamation-triangle';
+
+                notification.innerHTML = `
+                <div class="notification-icon">
+                    <i class="fas ${icon}"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-message">${message}</div>
+                    ${showProgress ? '<div class="notification-progress"><div class="notification-progress-bar"></div></div>' : ''}
+                </div>
+                <button class="notification-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+                // Add to container
+                container.appendChild(notification);
+
+                // Handle close button
+                const closeBtn = notification.querySelector('.notification-close');
+                closeBtn.addEventListener('click', () => {
+                    removeNotification(notification);
+                });
+
+                // Auto remove after duration
+                if (duration > 0) {
+                    const progressBar = notification.querySelector('.notification-progress-bar');
+                    if (progressBar) {
+                        let width = 100;
+                        const interval = duration / 100;
+                        const timer = setInterval(() => {
+                            if (width <= 0) {
+                                clearInterval(timer);
+                                removeNotification(notification);
+                            } else {
+                                width--;
+                                progressBar.style.width = width + '%';
+                            }
+                        }, interval);
+                    } else {
+                        setTimeout(() => {
+                            if (notification.parentNode) {
+                                removeNotification(notification);
+                            }
+                        }, duration);
+                    }
+                }
+
+                return notification;
+            }
+
+            function removeNotification(notification) {
+                notification.style.animation = 'slideOutRight 0.5s ease forwards';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 500);
+            }
+
+            // Show modal notification
+            function showModalNotification(type, title, message, actionText = null, actionCallback = null) {
+                // Set modal content based on type
+                const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+                const iconColor = type === 'success' ? 'var(--success-color)' : 'var(--error-color)';
+
+                modalIcon.className = 'modal-icon';
+                modalIcon.innerHTML = `<i class="fas ${icon}" style="color: ${iconColor}"></i>`;
+                modalTitle.textContent = title;
+                modalMessage.textContent = message;
+
+                // Show/hide action button
+                if (actionText && actionCallback) {
+                    modalActionBtn.style.display = 'inline-block';
+                    modalActionBtn.textContent = actionText;
+                    modalActionBtn.onclick = actionCallback;
+                } else {
+                    modalActionBtn.style.display = 'none';
+                }
+
+                // Show modal
+                notificationModal.classList.add('active');
+            }
+
+            // Close modal
+            modalCloseBtn.addEventListener('click', () => {
+                notificationModal.classList.remove('active');
+            });
+
+            // Close modal when clicking outside
+            notificationModal.addEventListener('click', (e) => {
+                if (e.target === notificationModal) {
+                    notificationModal.classList.remove('active');
+                }
+            });
+
+            // Confetti effect for success
+            function createConfetti() {
+                const colors = ['#977DFF', '#2E49FA', '#28a745', '#20c997', '#dc3545', '#e83e8c'];
+                const container = document.body;
+
+                for (let i = 0; i < 50; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.width = Math.random() * 10 + 5 + 'px';
+                    confetti.style.height = confetti.style.width;
+                    confetti.style.animation = `confettiFall ${Math.random() * 3 + 2}s linear forwards`;
+
+                    container.appendChild(confetti);
+
+                    // Remove confetti after animation
+                    setTimeout(() => {
+                        if (confetti.parentNode) {
+                            confetti.parentNode.removeChild(confetti);
+                        }
+                    }, 5000);
+                }
+            }
+
+            // Helper functions for specific notification types
+            function showSuccess(message, title = 'Berhasil', duration = 5000) {
+                createConfetti();
+                return showNotification('success', title, message, duration);
+            }
+
+            function showError(message, title = 'Error', duration = 5000) {
+                return showNotification('error', title, message, duration);
+            }
 
             // Load data from APIs
             async function loadFormData() {
                 try {
                     // Load needs
-                    const needsResponse = await fetch(`${API_BASE_URL}/needs/list`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
-
-                    if (needsResponse.ok) {
-                        const needsData = await needsResponse.json();
-                        populateNeeds(needsData);
-                    } else {
-                        console.error('Failed to load needs:', needsResponse.status);
-                    }
+                    const needsData = await apiRequest('/needs/list');
+                    populateNeeds(needsData);
 
                     // Load pages
-                    const pagesResponse = await fetch(`${API_BASE_URL}/pages/list`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
-
-                    if (pagesResponse.ok) {
-                        const pagesData = await pagesResponse.json();
-                        populatePages(pagesData);
-                    } else {
-                        console.error('Failed to load pages:', pagesResponse.status);
-                    }
+                    const pagesData = await apiRequest('/pages/list');
+                    populatePages(pagesData);
 
                     // Load colors
-                    const colorsResponse = await fetch(`${API_BASE_URL}/colors/list`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
-
-                    if (colorsResponse.ok) {
-                        const colorsData = await colorsResponse.json();
-                        populateColors(colorsData);
-                    } else {
-                        console.error('Failed to load colors:', colorsResponse.status);
-                        showError('Gagal memuat data warna. Silakan refresh halaman.');
-                    }
+                    const colorsData = await apiRequest('/colors/list');
+                    populateColors(colorsData);
 
                 } catch (error) {
                     console.error('Error loading form data:', error);
@@ -1228,9 +1932,9 @@
                     const checkboxItem = document.createElement('div');
                     checkboxItem.className = 'checkbox-item';
                     checkboxItem.innerHTML = `
-                        <input type="checkbox" id="page-${page.id}" name="pages_id" value="${page.id}">
-                        <label for="page-${page.id}">${page.name}</label>
-                    `;
+                    <input type="checkbox" id="page-${page.id}" name="pages_id" value="${page.id}">
+                    <label for="page-${page.id}">${page.name}</label>
+                `;
                     pagesContainer.appendChild(checkboxItem);
                 });
             }
@@ -1254,16 +1958,16 @@
                     colorOption.dataset.colorId = color.id;
                     colorOption.dataset.colorName = color.name.toLowerCase();
                     colorOption.innerHTML = `
-                        <div class="color-checkbox">
-                            <input type="checkbox" id="color-${color.id}" name="colors_id" value="${color.id}">
-                            <i class="fas fa-check"></i>
-                        </div>
-                        <div class="color-preview" style="background-color: ${hexCode};"></div>
-                        <div class="color-info">
-                            <div class="color-name">${color.name}</div>
-                            <div class="color-hex">${hexCode}</div>
-                        </div>
-                    `;
+                    <div class="color-checkbox">
+                        <input type="checkbox" id="color-${color.id}" name="colors_id" value="${color.id}">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="color-preview" style="background-color: ${hexCode};"></div>
+                    <div class="color-info">
+                        <div class="color-name">${color.name}</div>
+                        <div class="color-hex">${hexCode}</div>
+                    </div>
+                `;
 
                     colorOption.addEventListener('click', (e) => {
                         // Jangan toggle jika klik pada checkbox
@@ -1298,11 +2002,6 @@
                         });
                     });
                 }
-            }
-
-            // Get auth token
-            function gettoken() {
-                return localStorage.getItem('token') || sessionStorage.getItem('token');
             }
 
             // Form navigation
@@ -1399,94 +2098,121 @@
             orderForm.addEventListener('submit', async function (e) {
                 e.preventDefault();
 
-                const formData = new FormData();
-
-                // Add basic fields
-                formData.append('company_name', document.getElementById('company_name').value);
-                formData.append('need_id', document.getElementById('need_id').value);
-
-                // Add pages
-                document.querySelectorAll('input[name="pages_id"]:checked').forEach(checkbox => {
-                    formData.append('pages_id', checkbox.value);
-                });
-
-                // Add colors (multiple)
-                document.querySelectorAll('input[name="colors_id"]:checked').forEach(checkbox => {
-                    formData.append('colors_id', checkbox.value);
-                });
-
-                // Add optional fields
-                const referenceLink = document.getElementById('reference_link').value;
-                if (referenceLink) {
-                    formData.append('reference_link', referenceLink);
-                }
-
-                const notes = document.getElementById('notes').value;
-                if (notes) {
-                    formData.append('notes', notes);
-                }
-
-                // Add files
-                const logoFile = document.getElementById('logo_path').files[0];
-                if (logoFile) {
-                    formData.append('logo_path', logoFile);
-                }
-
-                const referenceFile = document.getElementById('reference_path').files[0];
-                if (referenceFile) {
-                    formData.append('reference_path', referenceFile);
-                }
+                // Tampilkan indikator loading
+                const originalText = submitOrder.textContent;
+                submitOrder.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+                submitOrder.disabled = true;
 
                 try {
-                    const response = await fetch(`${API_BASE_URL}/orders/create`, {
+                    const formData = new FormData();
+
+                    // Add basic fields
+                    formData.append('company_name', document.getElementById('company_name').value);
+                    formData.append('need_id', document.getElementById('need_id').value);
+
+                    // Add pages
+                    document.querySelectorAll('input[name="pages_id"]:checked').forEach(checkbox => {
+                        formData.append('pages_id', checkbox.value);
+                    });
+
+                    // Add colors (multiple)
+                    document.querySelectorAll('input[name="colors_id"]:checked').forEach(checkbox => {
+                        formData.append('colors_id', checkbox.value);
+                    });
+
+                    // Add optional fields
+                    const referenceLink = document.getElementById('reference_link').value;
+                    if (referenceLink) {
+                        formData.append('reference_link', referenceLink);
+                    }
+
+                    const notes = document.getElementById('notes').value;
+                    if (notes) {
+                        formData.append('notes', notes);
+                    }
+
+                    // Add files
+                    const logoFile = document.getElementById('logo_path').files[0];
+                    if (logoFile) {
+                        formData.append('logo_path', logoFile);
+                    }
+
+                    const referenceFile = document.getElementById('reference_path').files[0];
+                    if (referenceFile) {
+                        formData.append('reference_path', referenceFile);
+                    }
+
+                    const responseData = await apiRequestFormData('/orders/create', {
                         method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${gettoken()}`
-                        },
                         body: formData
                     });
 
-                    if (response.ok) {
-                        const result = await response.json();
-                        showSuccess('Pesanan berhasil dikirim! Kami akan segera menghubungi Anda.');
-                        orderForm.reset();
-                        document.querySelectorAll('.file-preview').forEach(preview => {
-                            preview.style.display = 'none';
-                            preview.innerHTML = '';
-                        });
-                    } else {
-                        throw new Error('Failed to submit order');
-                    }
+                    // Show success modal with confetti
+                    showModalNotification(
+                        'success',
+                        'Pesanan Berhasil!',
+                        'Terima kasih! Pesanan website Anda telah berhasil dikirim. Tim kami akan menghubungi Anda dalam 1x24 jam untuk konfirmasi lebih lanjut.',
+                        'Lihat Riwayat',
+                        () => {
+                            // Redirect to order history or dashboard
+                            window.location.href = 'dashboard.html';
+                        }
+                    );
+
+                    // Also show a small success notification
+                    showSuccess('Pesanan berhasil dikirim!');
+
+                    // Reset form
+                    orderForm.reset();
+                    document.querySelectorAll('.file-preview').forEach(preview => {
+                        preview.style.display = 'none';
+                        preview.innerHTML = '';
+                    });
+
+                    // Kembali ke step 1
+                    step3Content.style.display = 'none';
+                    step1Content.style.display = 'block';
+                    step3Indicator.classList.remove('active');
+                    step1Indicator.classList.add('active');
+
                 } catch (error) {
                     console.error('Error submitting order:', error);
-                    showError('Gagal mengirim pesanan. Silakan coba lagi.');
+
+                    // Handle different error responses
+                    let errorMessage = 'Gagal mengirim pesanan. Silakan coba lagi.';
+
+                    if (error.message) {
+                        errorMessage = error.message;
+                    } else if (error.message && error.message.includes('413')) {
+                        errorMessage = 'File yang diupload terlalu besar. Silakan pilih file yang lebih kecil.';
+                    } else if (error.message && error.message.includes('415')) {
+                        errorMessage = 'Format file tidak didukung. Silakan gunakan format JPG, PNG, atau PDF.';
+                    }
+
+                    // Show error modal
+                    showModalNotification(
+                        'error',
+                        'Pesanan Gagal',
+                        errorMessage
+                    );
+
+                    // Also show a small error notification
+                    showError(errorMessage);
+                } finally {
+                    // Restore button state
+                    submitOrder.textContent = originalText;
+                    submitOrder.disabled = false;
                 }
             });
-
-            // Helper functions
-            function showSuccess(message) {
-                successAlert.querySelector('span').textContent = message;
-                successAlert.style.display = 'block';
-                errorAlert.style.display = 'none';
-
-                setTimeout(() => {
-                    successAlert.style.display = 'none';
-                }, 5000);
-            }
-
-            function showError(message) {
-                errorAlert.querySelector('span').textContent = message;
-                errorAlert.style.display = 'block';
-                successAlert.style.display = 'none';
-
-                setTimeout(() => {
-                    errorAlert.style.display = 'none';
-                }, 5000);
-            }
 
             // Initialize form and check authentication
             checkAuthentication();
             loadFormData();
+
+            // Initialize auto-refresh after successful authentication
+            if (getToken()) {
+                setupTokenAutoRefresh();
+            }
         });
     </script>
 </body>

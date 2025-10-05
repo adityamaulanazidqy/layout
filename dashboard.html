@@ -203,6 +203,7 @@
 
         .profile-toggle:hover {
             background-color: rgba(151, 125, 255, 0.1);
+            color: var(--primary-color);
         }
 
         .profile-img {
@@ -393,6 +394,7 @@
             margin-bottom: 15px;
             position: relative;
             display: inline-block;
+            text-align: center;
         }
 
         .section-title h2:after {
@@ -903,10 +905,11 @@
             <nav class="navbar">
                 <a href="#" class="logo"><i class="fas fa-paint-brush"></i>Layout</a>
                 <ul class="nav-menu">
-                    <li class="nav-item"><a href="#" class="nav-link active">Home</a></li>
-                    <li class="nav-item"><a href="#features" class="nav-link">Layanan</a></li>
+                    <li class="nav-item"><a href="#hero" class="nav-link active">Home</a></li>
+                    <li class="nav-item"><a href="#features" class="nav-link">Features</a></li>
                     <li class="nav-item"><a href="#about" class="nav-link">About Us</a></li>
-                    <li class="nav-item"><a href="#contact" class="nav-link">Kontak</a></li>
+                    <li class="nav-item"><a href="#contact" class="nav-link">Contact</a></li>
+                    <!-- <li class="nav-item"><a href="#" class="btn btn-primary order">History</a></li> -->
                     <li class="nav-item"><a href="#" class="btn btn-primary order">Order Now</a></li>
                     <li class="nav-item"><a href="#call-me" class="btn btn-outline">Call Me</a></li>
 
@@ -919,9 +922,9 @@
                             <i class="fas fa-chevron-down"></i>
                         </div>
                         <div class="profile-dropdown">
-                            <a href="#"><i class="fas fa-user"></i> Profil Saya</a>
-                            <a href="#"><i class="fas fa-cog"></i> Pengaturan</a>
-                            <a href="#"><i class="fas fa-history"></i> Riwayat</a>
+                            <a href="#"><i class="fas fa-user"></i> My Profile</a>
+                            <a href="#"><i class="fas fa-cog"></i> Setting</a>
+                            <a href="#"><i class="fas fa-history"></i> History</a>
                             <div class="divider"></div>
                             <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
                         </div>
@@ -937,7 +940,7 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero" id="hero">
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
@@ -1080,7 +1083,6 @@
     </footer>
 
     <script>
-        // [Kode JavaScript yang sudah ada tetap sama]
         // Mobile Menu Toggle
         const order = document.querySelector(".order")
         const hamburger = document.querySelector(".hamburger");
@@ -1233,75 +1235,258 @@
             checkAuthentication();
         });
 
-        // Check if user is authenticated
-        function checkAuthentication() {
-            const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        // API Base URL
+        const API_BASE_URL = 'http://localhost:3749/api/v1';
+
+        // Token management
+        let isRefreshing = false;
+        let failedQueue = [];
+
+        // Process queue after token refresh
+        function processQueue(error, token = null) {
+            failedQueue.forEach(promise => {
+                if (error) {
+                    promise.reject(error);
+                } else {
+                    promise.resolve(token);
+                }
+            });
+            failedQueue = [];
+        }
+
+        // Get token from storage
+        function getToken() {
+            return localStorage.getItem('token') || sessionStorage.getItem('token');
+        }
+
+        // Set token in storage
+        function setToken(token) {
+            // Simpan di tempat yang sama dengan token sebelumnya
+            if (localStorage.getItem('token')) {
+                localStorage.setItem('token', token);
+            } else {
+                sessionStorage.setItem('token', token);
+            }
+        }
+
+        // Clear authentication data
+        function clearAuthData() {
+            localStorage.removeItem('token');
+            sessionStorage.removeItem('token');
+            localStorage.removeItem('role');
+            // Tidak perlu clear refresh_token karena itu HttpOnly cookie
+        }
+
+        // Redirect to login page
+        function redirectToLogin() {
+            clearAuthData();
+            window.location.href = 'login.html';
+        }
+
+        // Refresh token function - SIMPLIFIED (karena refresh token di cookie)
+        async function refreshToken() {
+            if (isRefreshing) {
+                return new Promise((resolve, reject) => {
+                    failedQueue.push({ resolve, reject });
+                });
+            }
+
+            isRefreshing = true;
+
+            try {
+                console.log('Attempting to refresh token...');
+                const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
+                    method: 'POST',
+                    credentials: 'include', // Penting untuk mengirim cookies
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                console.log('Refresh token response status:', response.status);
+
+                if (!response.ok) {
+                    // Jika status 401, berarti refresh token juga expired/invalid
+                    if (response.status === 401) {
+                        console.log('Refresh token expired or invalid');
+                        throw new Error('REFRESH_TOKEN_EXPIRED');
+                    }
+                    throw new Error(`Refresh failed: ${response.status} ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('Refresh token response:', data);
+
+                if (!data.access_token) {
+                    throw new Error('No access token in response');
+                }
+
+                // Store the new access token
+                setToken(data.access_token);
+
+                // Process all queued requests
+                processQueue(null, data.access_token);
+
+                console.log('Token refreshed successfully');
+                return data.access_token;
+            } catch (error) {
+                console.error('Token refresh failed:', error);
+
+                // Jika refresh token expired, redirect ke login
+                if (error.message === 'REFRESH_TOKEN_EXPIRED') {
+                    console.log('Redirecting to login due to expired refresh token');
+                    redirectToLogin();
+                }
+
+                processQueue(error, null);
+                throw error;
+            } finally {
+                isRefreshing = false;
+            }
+        }
+
+
+        // Enhanced fetch with automatic token refresh
+        async function authFetch(url, options = {}) {
+            let token = getToken();
 
             if (!token) {
-                // No token found, redirect to login
+                console.log('No token found, redirecting to login');
+                redirectToLogin();
+                return;
+            }
+
+            // Set default headers
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+                ...options.headers
+            };
+
+            try {
+                // First attempt
+                let response = await fetch(`${API_BASE_URL}${url}`, {
+                    ...options,
+                    headers,
+                    credentials: 'include'
+                });
+
+                console.log(`API ${url} response status:`, response.status);
+
+                // If token is expired, try to refresh
+                if (response.status === 401) {
+                    console.log('Access token expired, attempting refresh...');
+                    try {
+                        const newToken = await refreshToken();
+                        console.log('New token obtained:', newToken);
+
+                        // Retry request with new token
+                        headers['Authorization'] = `Bearer ${newToken}`;
+                        response = await fetch(`${API_BASE_URL}${url}`, {
+                            ...options,
+                            headers,
+                            credentials: 'include'
+                        });
+
+                        return response;
+                    } catch (refreshError) {
+                        console.error('Refresh token failed:', refreshError);
+                        redirectToLogin();
+                        throw refreshError;
+                    }
+                }
+
+                return response;
+            } catch (error) {
+                console.error(`Auth fetch error for ${url}:`, error);
+                throw error;
+            }
+        }
+
+
+        // Universal API request handler
+        async function apiRequest(endpoint, options = {}) {
+            try {
+                const response = await authFetch(endpoint, options);
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+                    throw new Error(errorData.message || `HTTP ${response.status}`);
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error(`API Request failed for ${endpoint}:`, error);
+                throw error;
+            }
+        }
+
+        // Check if user is authenticated
+        async function checkAuthentication() {
+            const token = getToken();
+
+            if (!token) {
                 console.log('No authentication token found, redirecting to login');
-                window.location.href = 'login.html';
+                redirectToLogin();
                 return false;
             }
 
-            // Token exists, fetch user profile
-            fetchUserProfile();
-            return true;
+            try {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                const exp = payload.exp * 1000;
+                const now = Date.now();
+                console.log('Token expires at:', new Date(exp));
+                console.log('Current time:', new Date(now));
+                console.log('Time until expiration:', (exp - now) / 1000 / 60, 'minutes');
+
+                // Verify token and get user role
+                const data = await apiRequest('/profile/role');
+                const role = data.role;
+                localStorage.setItem("role", role);
+                console.log('User role:', role);
+
+
+                // If user is admin, redirect to admin dashboard
+                if (role === 'admin') {
+                    console.log('Admin user detected, redirecting to admin dashboard');
+                    window.location.href = 'dashboard_admin.html';
+                    return false;
+                }
+
+                // If user is client, continue with normal flow
+                console.log('Client user detected, continuing to client dashboard');
+
+                // Token exists, fetch user profile
+                await fetchUserProfile();
+                return true;
+            } catch (error) {
+                console.error('Error checking authentication:', error);
+                redirectToLogin();
+                return false;
+            }
         }
 
         // Fetch user profile from API
         async function fetchUserProfile() {
             try {
-                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                const data = await apiRequest('/profile');
 
-                if (!token) {
-                    window.location.href = 'login.html';
-                    return;
-                }
+                // Update profile information
+                document.getElementById('profileName').textContent = data.username || data.email;
 
-                const response = await fetch('https://separately-refers-architect-feed.trycloudflare.com/api/v1/profile', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-
-                    // Update profile information
-                    document.getElementById('profileName').textContent = data.username || data.email;
-
-                    // Fetch profile image if available
-                    if (data.profile_path) {
-                        fetchProfileImage(data.profile_path, token);
-                    }
-                } else if (response.status === 401) {
-                    // Token expired or invalid
-                    console.log('Token expired or invalid, clearing storage and redirecting to login');
-                    clearAuthData();
-                    window.location.href = 'login.html';
-                } else {
-                    console.error('Failed to fetch profile:', response.status);
-                    // Don't redirect on other errors, just show the dashboard without profile data
+                // Fetch profile image if available
+                if (data.profile_path) {
+                    await fetchProfileImage(data.profile_path);
                 }
             } catch (error) {
                 console.error('Error fetching profile:', error);
-                // Don't redirect on network errors, just show the dashboard without profile data
             }
         }
 
         // Fetch profile image from server
-        async function fetchProfileImage(pathImage, token) {
+        async function fetchProfileImage(pathImage) {
             try {
-                const response = await fetch('https://separately-refers-architect-feed.trycloudflare.com/api/v1/image?path=' + pathImage, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                });
+                const response = await authFetch(`/profile/image?path=${encodeURIComponent(pathImage)}`);
 
                 if (response.ok) {
                     const blob = await response.blob();
@@ -1313,42 +1498,55 @@
             }
         }
 
-        // Clear authentication data
-        function clearAuthData() {
-            localStorage.removeItem('token');
-            sessionStorage.removeItem('token');
-            // Clear cookie as well if needed
-            document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-        }
-
         // Logout functionality
         document.getElementById('logoutBtn').addEventListener('click', async (e) => {
             e.preventDefault();
 
             try {
-                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-                if (token) {
-                    await fetch('https://separately-refers-architect-feed.trycloudflare.com/api/v1/logout', {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                }
-
-                // Clear all authentication data
-                clearAuthData();
-
-                // Redirect to home page
-                window.location.href = 'index.html';
+                // Panggil logout endpoint untuk clear server-side session
+                await fetch(`${API_BASE_URL}/logout`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
             } catch (error) {
-                console.error('Error during logout:', error);
-                // Still clear data and redirect even if API call fails
+                console.error('Error during logout API call:', error);
+            } finally {
+                // Clear client-side data dan redirect
                 clearAuthData();
                 window.location.href = 'index.html';
             }
         });
+
+        // Auto refresh token before expiration (optional)
+        function setupTokenAutoRefresh() {
+            // Check token expiration every minute
+            setInterval(async () => {
+                const token = getToken();
+                if (!token) return;
+
+                try {
+                    // Decode token to check expiration
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    const exp = payload.exp * 1000;
+                    const now = Date.now();
+                    const bufferTime = 5 * 60 * 1000; // 5 minutes buffer
+
+                    // Refresh if token expires in less than buffer time
+                    if (exp - now < bufferTime) {
+                        console.log('Auto-refreshing token before expiration...');
+                        await refreshToken();
+                        console.log('Token auto-refreshed successfully');
+                    }
+                } catch (error) {
+                    console.error('Error in token auto-refresh:', error);
+                }
+            }, 60 * 1000);
+        }
+
+        // Initialize auto-refresh after successful authentication
+        if (getToken()) {
+            setupTokenAutoRefresh();
+        }
     </script>
 </body>
 

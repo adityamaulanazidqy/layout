@@ -503,6 +503,7 @@
             background-size: 10% 10%;
             transform: rotate(30deg);
             animation: backgroundMove 60s linear infinite;
+            z-index: 0;
         }
 
         @keyframes backgroundMove {
@@ -771,6 +772,170 @@
                 font-size: 24px;
             }
         }
+
+        /* Popup Styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup {
+            background-color: var(--light-color);
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            padding: 40px;
+            position: relative;
+            transform: translateY(50px) scale(0.9);
+            transition: all 0.4s ease;
+            text-align: center;
+        }
+
+        .popup-overlay.active .popup {
+            transform: translateY(0) scale(1);
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--gray-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .popup-close:hover {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            transform: rotate(90deg);
+        }
+
+        .popup-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            color: var(--light-color);
+            font-size: 32px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(151, 125, 255, 0.7);
+            }
+
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 15px rgba(151, 125, 255, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(151, 125, 255, 0);
+            }
+        }
+
+        .popup-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+
+        .popup-message {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .popup-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .popup-btn {
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+        }
+
+        .popup-btn-login {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            box-shadow: 0 4px 15px rgba(151, 125, 255, 0.3);
+        }
+
+        .popup-btn-login:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(46, 73, 250, 0.4);
+        }
+
+        .popup-btn-cancel {
+            background-color: transparent;
+            color: #888;
+            border: 2px solid #ddd;
+        }
+
+        .popup-btn-cancel:hover {
+            background-color: #f5f5f5;
+            color: #555;
+        }
+
+        /* Responsive for popup */
+        @media (max-width: 576px) {
+            .popup {
+                padding: 30px 20px;
+            }
+
+            .popup-title {
+                font-size: 20px;
+            }
+
+            .popup-buttons {
+                flex-direction: column;
+            }
+
+            .popup-btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 
@@ -806,7 +971,7 @@
                     <p class="hero-description">Layout menyediakan jasa pembuatan website dan desain grafis terbaik
                         untuk membantu bisnis Anda tumbuh di era digital.</p>
                     <div class="hero-buttons">
-                        <a href="#" class="btn btn-primary">Order Sekarang</a>
+                        <a href="#" class="btn btn-primary order-hero">Order Sekarang</a>
                         <a href="#call-me" class="btn btn-outline">Hubungi Kami</a>
                     </div>
                 </div>
@@ -938,18 +1103,82 @@
         </div>
     </footer>
 
+    <!-- Popup untuk order tanpa token -->
+    <div class="popup-overlay" id="loginPopup">
+        <div class="popup">
+            <div class="popup-close" id="closePopup">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="popup-icon">
+                <i class="fas fa-user-lock"></i>
+            </div>
+            <h2 class="popup-title">Login Diperlukan</h2>
+            <p class="popup-message">Anda perlu login terlebih dahulu untuk melakukan pemesanan. Silakan login atau
+                daftar jika belum memiliki akun.</p>
+            <div class="popup-buttons">
+                <button class="popup-btn popup-btn-login" id="goToLogin">Login / Daftar</button>
+                <button class="popup-btn popup-btn-cancel" id="cancelPopup">Nanti Saja</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Mobile Menu Toggle
-        const order = document.querySelector(".order")
+        const order = document.querySelector(".order");
+        const orderHero = document.querySelector(".order-hero");
         const hamburger = document.querySelector(".hamburger");
         const navMenu = document.querySelector(".nav-menu");
         const body = document.body;
         const header = document.querySelector("header");
 
-        order.addEventListener("click", () => {
-            window.location.href = "order_now.html";
+        // Popup elements
+        const loginPopup = document.getElementById("loginPopup");
+        const closePopup = document.getElementById("closePopup");
+        const cancelPopup = document.getElementById("cancelPopup");
+        const goToLogin = document.getElementById("goToLogin");
+
+        // Function to show popup
+        function showLoginPopup() {
+            loginPopup.classList.add("active");
+            body.style.overflow = "hidden";
+        }
+
+        // Function to hide popup
+        function hideLoginPopup() {
+            loginPopup.classList.remove("active");
+            body.style.overflow = "auto";
+        }
+
+        // Order button event
+        function handleOrderClick(e) {
+            let token = localStorage.getItem('token');
+            if (!token) {
+                e.preventDefault();
+                showLoginPopup();
+            } else {
+                window.location.href = 'order_now.html';
+            }
+        }
+
+        // Add event listeners to order buttons
+        order.addEventListener("click", handleOrderClick);
+        orderHero.addEventListener("click", handleOrderClick);
+
+        // Popup event listeners
+        closePopup.addEventListener("click", hideLoginPopup);
+        cancelPopup.addEventListener("click", hideLoginPopup);
+        goToLogin.addEventListener("click", function () {
+            window.location.href = 'login.html';
         });
 
+        // Close popup when clicking outside
+        loginPopup.addEventListener("click", function (e) {
+            if (e.target === loginPopup) {
+                hideLoginPopup();
+            }
+        });
+
+        // Hamburger menu toggle
         hamburger.addEventListener("click", () => {
             hamburger.classList.toggle("active");
             navMenu.classList.toggle("active");
@@ -961,6 +1190,7 @@
             }
         });
 
+        // Nav link click
         document.querySelectorAll(".nav-link").forEach(n => n.addEventListener("click", () => {
             hamburger.classList.remove("active");
             navMenu.classList.remove("active");

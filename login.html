@@ -648,7 +648,7 @@
             const btnLogin = document.getElementById('btnLogin');
 
             // API Base URL
-            const API_BASE_URL = 'https://separately-refers-architect-feed.trycloudflare.com/api/v1'; // Ganti dengan URL API Anda
+            const API_BASE_URL = 'http://localhost:3749/api/v1';
 
             // Form submission
             loginForm.addEventListener('submit', async function (e) {
@@ -699,32 +699,30 @@
                         body: JSON.stringify({
                             email: email,
                             password: password
-                        })
+                        }),
+                        credentials: 'include' // Penting untuk mengirim/menerima cookies
                     });
 
                     const data = await response.json();
 
                     if (response.ok) {
                         // Login successful
-                        const token = data.token;
+                        const access_token = data.access_token;
 
-                        // Store token based on remember me preference
+                        // Store access token saja (refresh token sudah di cookie)
                         if (rememberMe) {
-                            localStorage.setItem('token', token);
+                            localStorage.setItem('token', access_token);
                         } else {
-                            sessionStorage.setItem('token', token);
+                            sessionStorage.setItem('token', access_token);
                         }
-
-                        // Store token in cookie for server-side usage if needed
-                        document.cookie = `token=${token}; path=/; max-age=${rememberMe ? 604800 : 86400}`; // 7 days or 1 day
 
                         showSuccess('Login berhasil! Mengalihkan ke dashboard...');
 
-                        const role = await checkRole(token);
-
+                        // Get user role and redirect
+                        const role = await checkRole(access_token);
                         setTimeout(() => {
                             redirectUser(role);
-                        }, 2000);
+                        }, 1500);
 
                     } else {
                         // Login failed
@@ -737,12 +735,14 @@
                 }
             }
 
-            async function checkRole(token) {
+
+            // Check user role function
+            async function checkRole(access_token) {
                 try {
-                    const response = await fetch("https://separately-refers-architect-feed.trycloudflare.com/api/v1/role", {
+                    const response = await fetch(`${API_BASE_URL}/profile/role`, {
                         method: "GET",
                         headers: {
-                            "Authorization": `Bearer ${token}`,
+                            "Authorization": `Bearer ${access_token}`,
                             "Content-Type": "application/json"
                         }
                     });
@@ -754,16 +754,16 @@
 
                     const data = await response.json();
                     const role = data.role;
-                    localStorage.setItem("role", role); // Simpan role yang benar
-                    return role; // Mengembalikan nilai role untuk digunakan
+                    localStorage.setItem("role", role);
+                    return role;
                 } catch (error) {
-                    console.error("Error:", error);
+                    console.error("Error checking role:", error);
                     showError(error.message);
-                    throw error; // Melemparkan error kembali agar dapat ditangkap oleh pemanggil
+                    throw error;
                 }
             }
 
-            // Fungsi untuk mengarahkan pengguna berdasarkan role
+            // Redirect user based on role
             function redirectUser(role) {
                 if (role === "admin") {
                     window.location.href = 'dashboard_admin.html';
@@ -772,7 +772,7 @@
                 } else {
                     console.log('Role tidak dikenal atau data role null:', role);
                     showError('Role pengguna tidak valid.');
-                    clearAuthData(); // Hapus data login jika role tidak valid
+                    clearAuthData();
                 }
             }
 
@@ -781,23 +781,24 @@
                 localStorage.removeItem('token');
                 localStorage.removeItem('role');
                 sessionStorage.removeItem('token');
-                document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
             }
-
 
             // Check if user is already logged in
-            function checkExistingLogin() {
+            async function checkExistingLogin() {
+                console.log('Checking existing login...');
                 const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-                if (token) {
-                    window.location.href = 'dashboard.html';
-                }
-            }
 
-            // Clear authentication data
-            function clearAuthData() {
-                localStorage.removeItem('token');
-                sessionStorage.removeItem('token');
-                document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+                if (token) {
+                    try {
+                        const role = await checkRole(token);
+                        console.log('Role yang didapatkan: ', role);
+                        redirectUser(role);
+                    } catch (error) {
+                        console.error('Error checking existing login:', error);
+                        // Jika error, clear token dan biarkan user login manual
+                        clearAuthData();
+                    }
+                }
             }
 
             // Helper functions

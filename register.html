@@ -761,7 +761,7 @@
                 }
 
                 // Simulate sending email verification
-                simulateSendEmail();
+                simulateSendEmail(email);
 
                 // Hide step 1, show step 2
                 step1Content.style.display = 'none';
@@ -778,6 +778,8 @@
 
             // Move to step 3 (phone verification)
             btnStep2.addEventListener('click', function () {
+                const email = document.getElementById('email').value;
+                const telephone = document.getElementById('telephone').value;
                 const emailToken = document.getElementById('emailToken').value;
 
                 if (!emailToken) {
@@ -785,34 +787,48 @@
                     return;
                 }
 
-                // Simulate email token verification
-                if (emailToken === '123456') { // Hardcoded for demo
-                    // Hide step 2, show step 3
-                    step2Content.classList.remove('active');
-                    step3Content.classList.add('active');
+                const data = { email: email, otp: emailToken };
+                let response = fetch('http://localhost:3749/api/v1/otp/verify/email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.error) {
+                            step2Content.classList.remove('active');
+                            step3Content.classList.add('active');
 
-                    // Update step indicator
-                    step2Indicator.classList.remove('active');
-                    step2Indicator.classList.add('completed');
-                    step3Indicator.classList.add('active');
+                            // Update step indicator
+                            step2Indicator.classList.remove('active');
+                            step2Indicator.classList.add('completed');
+                            step3Indicator.classList.add('active');
 
-                    // Simulate sending OTP to phone
-                    simulateSendOTP();
+                            // Simulate sending OTP to phone
+                            simulateSendOTP(telephone);
 
-                    // Start phone verification timer
-                    startPhoneTimer();
+                            // Start phone verification timer
+                            startPhoneTimer();
 
-                    // Stop email timer
-                    clearInterval(emailTimerInterval);
-                } else {
-                    showError('Token verifikasi email tidak valid');
-                }
+                            // Stop email timer
+                            clearInterval(emailTimerInterval);
+                        } else {
+                            showError('Token verifikasi email tidak valid');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showError('Terjadi kesalahan saat memverifikasi token email.');
+                    });
             });
 
             // Form submission
             document.getElementById('registrationForm').addEventListener('submit', function (e) {
                 e.preventDefault();
 
+                const telephone = document.getElementById('telephone').value;
                 const phoneOTP = document.getElementById('phoneOTP').value;
 
                 if (!phoneOTP) {
@@ -820,21 +836,36 @@
                     return;
                 }
 
-                // Simulate OTP verification
-                if (phoneOTP === '123456') { // Hardcoded for demo
-                    // Simulate successful registration
-                    simulateRegistration();
+                const data = { telephone: telephone, otp: phoneOTP };
 
-                    // Stop phone timer
-                    clearInterval(phoneTimerInterval);
-                } else {
-                    showError('Kode OTP telepon tidak valid');
-                }
+                let response = fetch('http://localhost:3749/api/v1/otp/verify/telephone', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.error) {
+                            simulateRegistration();
+
+                            clearInterval(phoneTimerInterval);
+                        } else {
+                            showError('Kode OTP telepon tidak valid');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showError('Terjadi kesalahan saat memverifikasi kode OTP.');
+                    });
             });
 
             // Resend email token
             resendEmail.addEventListener('click', function () {
-                simulateSendEmail();
+                const email = document.getElementById('email').value;
+
+                simulateSendEmail(email);
                 emailTimeLeft = 5 * 60; // Reset timer
                 startEmailTimer();
                 showSuccess('Token verifikasi telah dikirim ulang ke email Anda');
@@ -842,7 +873,9 @@
 
             // Resend phone OTP
             resendPhone.addEventListener('click', function () {
-                simulateSendOTP();
+                const telephone = document.getElementById('telephone').value;
+
+                simulateSendOTP(telephone);
                 phoneTimeLeft = 5 * 60; // Reset timer
                 startPhoneTimer();
                 showSuccess('Kode OTP telah dikirim ulang ke telepon Anda');
@@ -896,16 +929,59 @@
             }
 
             // Simulation functions
-            function simulateSendEmail() {
+            function simulateSendEmail(email) {
                 console.log('Mengirim token verifikasi ke email...');
-                // In a real application, this would make an API call to your backend
-                showSuccess('Token verifikasi telah dikirim ke email Anda');
+
+                let response = fetch('http://localhost:3749/api/v1/otp/send/email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: email })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.error) {
+                            showSuccess('Token verifikasi telah dikirim ke email Anda');
+                        } else {
+                            showError('Gagal mengirim token verifikasi. Silakan coba lagi.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showError('Terjadi kesalahan saat mengirim token verifikasi.');
+                    });
             }
 
-            function simulateSendOTP() {
+            function simulateSendOTP(telephone) {
                 console.log('Mengirim OTP ke telepon...');
-                // In a real application, this would make an API call to your backend
-                showSuccess('Kode OTP telah dikirim ke telepon Anda');
+
+                if (!telephone) {
+                    showError('Nomor telepon tidak valid');
+                    return;
+                }
+
+                console.log('Telephone:', telephone, ' type:', typeof telephone);
+
+                let response = fetch('http://localhost:3749/api/v1/otp/send/telephone', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ telephone: telephone })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.error) {
+                            showSuccess('Kode OTP telah dikirim ke telepon Anda');
+                        } else {
+                            showError('Gagal mengirim kode OTP. Silakan coba lagi.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showError('Terjadi kesalahan saat mengirim kode OTP.');
+                    });
             }
 
             function simulateRegistration() {
@@ -915,15 +991,35 @@
                 // Get form values
                 const username = document.getElementById('username').value;
                 const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
                 const telephone = document.getElementById('telephone').value;
 
-                // Show success message (in a real app, you would redirect to another page)
-                alert(`Pendaftaran berhasil!\n\nUsername: ${username}\nEmail: ${email}\nTelepon: ${telephone}\n\nAnda akan diarahkan ke halaman login.`);
+                const data = { username: username, email: email, password: password, telephone: telephone };
+                console.log('User Data:', data);
 
-                // Simulate redirect
-                setTimeout(function () {
-                    window.location.href = 'login.html';
-                }, 3000);
+                let response = fetch('http://localhost:3749/api/v1/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.error) {
+                            showSuccess('Pendaftaran berhasil! Mengalihkan ke halaman login...');
+                            // Simulate redirect
+                            setTimeout(function () {
+                                window.location.href = 'login.html';
+                            }, 3000);
+                        } else {
+                            showError('Gagal mendaftar. Silakan coba lagi.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showError('Terjadi kesalahan saat mendaftar.');
+                    });
             }
 
             // Helper functions
